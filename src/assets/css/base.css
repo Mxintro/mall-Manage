@@ -1,0 +1,17 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+html, body, #app{ 
+
+  height: 100%;
+}
+

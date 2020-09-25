@@ -2,10 +2,10 @@ module.exports = {
   configureWebpack: {
     resolve: {
       alias: {
-        views: '@/views'
+        views: '@/views',
+        assets: '@/assets',
+        network: '@/network'
       }
     }
-  },
-
-  lintOnSave: false
+  }
 }

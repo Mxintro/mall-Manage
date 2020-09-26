@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/Login'
+    redirect: '/login'
   },
   {
     path: '/login',
@@ -15,6 +15,11 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ 'views/login/Login.vue')
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: () => import('views/home/Home')
   }
 ]
 
@@ -22,6 +27,13 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // to, from都是route对象
+  const token = window.sessionStorage.getItem('token')
+  if (to.name !== 'Login' && !token) return next({ name: 'Login' })
+  return next()
 })
 
 export default router

@@ -3,13 +3,25 @@
     <div class="login-bar">
       <div class="login-title">用户登录</div>
       <div class="login-form">
-        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-width="80px">
+        <el-form
+          ref="loginForm"
+          :model="loginForm"
+          :rules="loginRules"
+          label-width="80px"
+        >
           <el-form-item label="用户名" prop="username">
-            <el-input prefix-icon="el-icon-user" v-model="loginForm.username"></el-input>
+            <el-input
+              prefix-icon="el-icon-user"
+              v-model="loginForm.username"
+            ></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input type="password" prefix-icon="el-icon-lock" v-model="loginForm.password"
-            @keyup.enter.native.prevent="submitForm"></el-input>
+            <el-input
+              type="password"
+              prefix-icon="el-icon-lock"
+              v-model="loginForm.password"
+              @keyup.enter.native.prevent="submitForm"
+            ></el-input>
           </el-form-item>
           <el-form-item label-position="right" class="submit-button">
             <el-button type="primary" @click="submitForm">提交</el-button>
@@ -29,14 +41,19 @@ export default {
   data () {
     return {
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       loginRules: {
         // 要与对应的input绑定的属性同名
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          {
+            min: 3,
+            max: 10,
+            message: '长度在 3 到 10 个字符',
+            trigger: 'blur'
+          }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -46,16 +63,20 @@ export default {
     }
   },
   methods: {
-    submitForm () {
+    submitForm() {
       // const { name, password } = this.loginForm
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          alert('submit!')
-          Login(this.loginForm).then(res => {
+          Login(this.loginForm).then((res) => {
             console.log(res)
             const data = res.data
             if (data.meta.status === 200) {
-              console.log('登录成功')
+              window.sessionStorage.setItem('token', data.data.token)
+              this.$message({
+                message: '登录成功',
+                type: 'success'
+              })
+              this.$router.push('/home')
             } else {
               console.log('登录失败')
             }

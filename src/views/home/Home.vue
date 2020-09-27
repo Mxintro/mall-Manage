@@ -12,6 +12,7 @@
           text-color="#EEE8F0"
           active-text-color="#ffd04b"
           router
+          :default-active="activePath"
         >
           <!-- 一级菜单 -->
           <el-submenu
@@ -28,6 +29,7 @@
               :index="'/'+child.path"
               v-for="child in menu.children"
               :key="child.id"
+              @click="itemClick('/'+child.path)"
               ><template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>{{ child.authName }}</span>
@@ -58,7 +60,8 @@ export default {
         orders: 'iconfont icon-danju',
         reports: 'iconfont icon-baobiao'
       },
-      isCollapse: false
+      isCollapse: false,
+      activePath: window.sessionStorage.getItem('activePath') || ''
     }
   },
   created() {
@@ -77,6 +80,10 @@ export default {
     },
     toggleClick() {
       this.isCollapse = !this.isCollapse
+    },
+    itemClick(arg) {
+      window.sessionStorage.setItem('activePath', arg)
+      this.activePath = arg
     }
   }
 }
@@ -104,12 +111,6 @@ export default {
 }
 .el-aside .el-menu {
   border-right: none;
-}
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
 }
 
 body > .el-container {

@@ -63,7 +63,7 @@ export default {
     }
   },
   methods: {
-    submitForm() {
+    submitForm () {
       // const { name, password } = this.loginForm
       this.$refs.loginForm.validate((valid) => {
         if (valid) {

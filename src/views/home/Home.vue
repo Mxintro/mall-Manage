@@ -1,72 +1,133 @@
 <template>
   <el-container>
-  <el-header>Header</el-header>
-  <el-container>
-    <el-aside width="200px">
-      <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo"
-      background-color="#313743"
-      text-color="#EEE8F0"
-      active-text-color="#ffd04b">
-      <!-- 一级菜单 -->
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
-        </template>
-        <!-- 二级菜单 -->
-        <el-menu-item index="1-1">选项1</el-menu-item>
-      </el-submenu>
-    </el-menu>
-    </el-aside>
-    <el-main>Main</el-main>
+    <el-header>Header</el-header>
+    <el-container>
+      <el-aside :width="isCollapse ? '60px' : '200px'">
+        <div class="toggle-button" @click="toggleClick">|||</div>
+        <el-menu
+          :collapse = "isCollapse"
+          :collapse-transition = false
+          class="el-menu-vertical-demo"
+          background-color="#313743"
+          text-color="#EEE8F0"
+          active-text-color="#ffd04b"
+          router
+        >
+          <!-- 一级菜单 -->
+          <el-submenu
+            :index="menu.id + ''"
+            v-for="menu in menuList"
+            :key="menu.id"
+          >
+            <template slot="title">
+              <i :class="iconFont[menu.path]"></i>
+              <span>{{ menu.authName }}</span>
+            </template>
+            <!-- 二级菜单 -->
+            <el-menu-item
+              :index="'/'+child.path"
+              v-for="child in menu.children"
+              :key="child.id"
+              ><template slot="title">
+                <i class="el-icon-menu"></i>
+                <span>{{ child.authName }}</span>
+              </template>
+            </el-menu-item>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
+    </el-container>
   </el-container>
-</el-container>
 </template>
 
 <script>
+import { getMenus } from 'network/axios'
+
 export default {
-  name: 'Home'
+  name: 'Home',
+  data() {
+    return {
+      menuList: [],
+      iconFont: {
+        users: 'iconfont icon-users',
+        rights: 'iconfont icon-tijikongjian',
+        goods: 'iconfont icon-shangpin',
+        orders: 'iconfont icon-danju',
+        reports: 'iconfont icon-baobiao'
+      },
+      isCollapse: false
+    }
+  },
+  created() {
+    this.getMenuList()
+  },
+  methods: {
+    getMenuList() {
+      getMenus().then((res) => {
+        const { data: resData } = res
+        if (resData.meta.status === 200) {
+          this.menuList = resData.data
+        } else {
+          console.log(resData.meta.msg)
+        }
+      })
+    },
+    toggleClick() {
+      this.isCollapse = !this.isCollapse
+    }
+  }
 }
 </script>
 
 <style scoped>
-  .el-header {
-    background-color: #363D40;
-    color: #EEE8F0;
-    text-align: center;
-    line-height: 60px;
-  }
 
-  .el-aside {
-    background-color: #313743;
-    color: #EEE8F0;
-    text-align: center;
-    line-height: 200px;
-  }
+.el-header {
+  background-color: #363d40;
+  color: #eee8f0;
+  text-align: center;
+  line-height: 60px;
+}
 
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    line-height: 160px;
-  }
+.el-aside {
+  background-color: #313743;
+  color: #eee8f0;
+  text-align: center;
+  line-height: 200px;
+}
+.toggle-button {
+  line-height: 30px;
+  letter-spacing: 0.2em;
+  background-color: #505A6C;
+}
+.el-aside .el-menu {
+  border-right: none;
+}
+.el-main {
+  background-color: #e9eef3;
+  color: #333;
+  text-align: center;
+  line-height: 160px;
+}
 
-  body > .el-container {
-    margin-bottom: 40px;
-  }
+body > .el-container {
+  margin-bottom: 40px;
+}
 
-  .el-container{
-    height: 100%;
-  }
+.el-container {
+  height: 100%;
+}
 
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  }
-
-  .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
-  }
+/* .el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+  line-height: 260px;
+}
+.el-container:nth-child(7) .el-aside {
+  line-height: 320px;
+} */
+.iconfont {
+  margin-right: 10px;
+}
 </style>

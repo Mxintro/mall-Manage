@@ -5,16 +5,13 @@
 </template>
 
 <script>
-
 export default {
   name: 'app',
-  components: {
-
-  }
+  components: {},
 }
 </script>
 
 <style>
-@import "assets/css/base.css";
-
+@import 'assets/css/base.css';
+@import 'assets/fonts/iconfont.css';
 </style>

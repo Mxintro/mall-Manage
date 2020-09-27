@@ -10,13 +10,12 @@ instance.interceptors.request.use(config => {
   console.log(config)
   return config
 })
-// instance.interceptors.response.use(function (response) {
-//   // 对响应数据做点什么
-//   return response.data
-// }, function (error) {
-//   // 对响应错误做点什么
-//   return Promise.reject(error)
-// })
+// instance.interceptors.response.use
+
 export function Login (data) {
   return instance.post('/login', data)
+}
+
+export function getMenus() {
+  return instance.get('/menus')
 }

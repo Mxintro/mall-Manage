@@ -69,13 +69,10 @@ export default {
   },
   methods: {
     getMenuList() {
-      getMenus().then((res) => {
-        const { data: resData } = res
-        if (resData.meta.status === 200) {
-          this.menuList = resData.data
-        } else {
-          console.log(resData.meta.msg)
-        }
+      getMenus().then((res, error) => {
+        this.menuList = res.data
+      }).catch(error => {
+        console.error(error)
       })
     },
     toggleClick() {

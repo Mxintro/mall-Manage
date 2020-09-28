@@ -10,7 +10,15 @@ instance.interceptors.request.use(config => {
   console.log(config)
   return config
 })
-// instance.interceptors.response.use
+
+instance.interceptors.response.use(response => {
+  const status = response.data.meta.status
+  if (status === 200) {
+    return response.data
+  } else {
+    return Promise.reject(new Error(response.data.meta.msg))
+  }
+})
 
 export function Login (data) {
   return instance.post('/login', data)
@@ -18,4 +26,8 @@ export function Login (data) {
 
 export function getMenus() {
   return instance.get('/menus')
+}
+
+export function getUsers(params) {
+  return instance.get('/users', { params: params })
 }

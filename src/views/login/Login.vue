@@ -67,20 +67,12 @@ export default {
       // const { name, password } = this.loginForm
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          Login(this.loginForm).then((res) => {
-            console.log(res)
-            const data = res.data
-            if (data.meta.status === 200) {
-              window.sessionStorage.setItem('token', data.data.token)
-              this.$message({
-                message: '登录成功',
-                type: 'success'
-              })
-              this.$router.push('/home')
-            } else {
-              console.log('登录失败')
-            }
-            console.log(data.meta.msg)
+          Login(this.loginForm).then(res => {
+            window.sessionStorage.setItem('token', res.data.token)
+            this.$message({ message: '登录成功', type: 'success'})
+            this.$router.push('/home')
+          }).catch(error => {
+            this.$message({ message: error, type: 'error'})
           })
         } else {
           console.log('error submit!!')

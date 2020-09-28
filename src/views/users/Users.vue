@@ -21,8 +21,37 @@
 </template>
 
 <script>
+import { getUsers } from 'network/axios'
+
 export default {
-  name: 'Users'
+  name: 'Users',
+  data() {
+    return {
+      queryParams: {
+        query: '',
+        pagenum: 1,
+        pagesize: 10
+      },
+      totalPage: 0,
+      pageNum: 1,
+      userList: []
+    }
+  },
+  created() {
+    this.getUserInfo()
+  },
+  methods: {
+    getUserInfo() {
+      getUsers(this.queryParams).then(res => {
+        const data = res.data
+        this.totalPage = data.tatalpage
+        this.pageNum = data.pagenum
+        this.userList = data.users
+      }).catch(error => {
+        console.error(error)
+      })
+    }
+  }
 }
 </script>
 

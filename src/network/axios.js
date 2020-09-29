@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: 'http://127.0.0.1:8888/api/private/v1/',
   timeout: 1000
 })
@@ -13,6 +13,7 @@ instance.interceptors.request.use(config => {
 
 instance.interceptors.response.use(response => {
   const status = response.data.meta.status
+  console.log(response)
   if (status === 200) {
     return response.data
   } else {
@@ -26,8 +27,4 @@ export function Login (data) {
 
 export function getMenus() {
   return instance.get('/menus')
-}
-
-export function getUsers(params) {
-  return instance.get('/users', { params: params })
 }

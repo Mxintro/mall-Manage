@@ -72,7 +72,7 @@ export default {
       getMenus().then((res, error) => {
         this.menuList = res.data
       }).catch(error => {
-        console.error(error)
+        this.$message({ message: error, type: 'error'})
       })
     },
     toggleClick() {

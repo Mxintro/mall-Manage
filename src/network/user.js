@@ -5,7 +5,7 @@ export function getUsers(params) {
 }
 
 export function addUser(params) {
-  return instance.post('/user', { params: params})
+  return instance.post('/users', params)
 }
 
 export function userStateChange({uId, type}) {

@@ -45,15 +45,10 @@ export default {
         password: '123456'
       },
       loginRules: {
-        // 要与对应的input绑定的属性同名
+        // 要与对应的input绑定的属性同名, Form-Item 的 prop 属性
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          {
-            min: 3,
-            max: 10,
-            message: '长度在 3 到 10 个字符',
-            trigger: 'blur'
-          }
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },

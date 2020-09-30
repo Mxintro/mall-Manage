@@ -14,7 +14,7 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(response => {
   const status = response.data.meta.status
   console.log(response)
-  if (status === 200) {
+  if (status % 200 <= 10) {
     return response.data
   } else {
     return Promise.reject(new Error(response.data.meta.msg))

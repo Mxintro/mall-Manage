@@ -26,7 +26,7 @@
           destroy-on-close
           width="30%">
             <el-form
-            ref="loginForm"
+            ref="addUserForm"
             :model="userParams"
             :rules="registerRules"
             label-width="80px"
@@ -183,12 +183,12 @@ export default {
     addUser() {
       addUser(this.userParams).then(res => {
         this.$message({ message: '添加成功', type: 'success'})
-        console.log(res)
         this.userList.unshift(res.data)
         this.dialogVisible = false
       }).catch(error => {
         this.$message({ message: error, type: 'error'})
       })
+      this.$refs.addUserForm.resetFields()
     }
   }
 }

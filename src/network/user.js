@@ -11,3 +11,7 @@ export function addUser(params) {
 export function userStateChange({uId, type}) {
   return instance.put(`users/${uId}/state/${type}`)
 }
+
+export function editUser({id, email, mobile}) {
+  return instance.put(`/users/${id}`, { email, mobile })
+}

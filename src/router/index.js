@@ -10,7 +10,10 @@ const Login = () => import('views/login/Login.vue')
 const routes = [
   { path: '/', component: Home },
   { path: '/login', name: 'Login', component: Login },
-  { path: '/home', name: 'Home', component: Home,
+  {
+    path: '/home',
+    name: 'Home',
+    component: Home,
     children: [
       { path: '/users', component: Users}
     ]

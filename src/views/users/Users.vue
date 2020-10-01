@@ -50,7 +50,7 @@
       <el-table-column prop="id" label="操作" width="175px">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="mini" @click="editUserShow(scope.row)"></el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUser(scope.row)"></el-button>
           <el-tooltip content="Top center" placement="top" :enterable="false">
             <el-button type="warning" icon="el-icon-star-off" size="mini"></el-button>
           </el-tooltip>
@@ -84,7 +84,7 @@
 import AddUser from './childComps/AddUser'
 import EditUser from './childComps/EditUser'
 
-import { getUsers, userStateChange } from 'network/user'
+import { getUsers, userStateChange, deleteUser } from 'network/user'
 
 export default {
   name: 'Users',
@@ -118,6 +118,7 @@ export default {
         this.totalPage = data.total
         this.pageNum = data.pagenum
         this.userList = data.users
+        this.id = data.id
       }).catch(error => {
         this.$message({ message: error, type: 'error'})
       })
@@ -154,6 +155,16 @@ export default {
     },
     editHide() {
       this.editUserVisible = false
+    },
+    deleteUser(row) {
+      deleteUser(row.id).then(() => {
+        this.$message.success('删除成功')
+        const index = this.userList.indexOf(this.userList.find(item => item.id === row.id))
+        this.userList.splice(index, 1)
+        this.totalPage--
+      }).catch(error => {
+        this.$message.error(error)
+      })
     }
   }
 }

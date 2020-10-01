@@ -15,3 +15,7 @@ export function userStateChange({uId, type}) {
 export function editUser({id, email, mobile}) {
   return instance.put(`/users/${id}`, { email, mobile })
 }
+
+export function deleteUser(id) {
+  return instance.delete(`/users/${id}`)
+}

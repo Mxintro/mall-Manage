@@ -2,7 +2,7 @@
 <div>
   <!-- 不直接修改props属性 -->
   <el-dialog
-    title="提示"
+    title="修改用户"
     :visible="dialogVisible"
     @update:visible = "cancelClick"
     destroy-on-close
@@ -13,10 +13,11 @@
       :rules="registerRules"
       label-width="80px"
     >
-      <el-form-item label="ID" prop="id">
+      <el-form-item label="用户名" prop="username">
         <el-input
           prefix-icon="el-icon-user"
-          v-model="userParams.id"
+          v-model="userParams.username"
+          disabled
         ></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
@@ -49,16 +50,12 @@ export default {
   data() {
     return {
       userParams: {
-        id: '',
+        username: '',
         email: '',
         mobile: ''
       },
       registerRules: {
         // 要与对应的input绑定的属性同名
-        id: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 1, message: '请输入合法id', trigger: 'blur' }
-        ],
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
@@ -74,6 +71,10 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: false
+    },
+    editUserInfo: {
+      type: Object,
+      default: () => { return {} }
     }
   },
   methods: {
@@ -85,10 +86,14 @@ export default {
       }).catch(error => {
         this.$message({ message: error, type: 'error'})
       })
-
     },
     cancelClick() {
       this.$emit('cancelClick')
+    }
+  },
+  watch: {
+    editUserInfo() {
+      this.userParams = this.editUserInfo
     }
   }
 }

@@ -2,7 +2,7 @@
   <div>
     <!-- 不直接修改props属性 -->
     <el-dialog
-      title="提示"
+      title="添加用户"
       :visible="dialogVisible"
       @update:visible = "cancelClick"
       destroy-on-close
@@ -53,6 +53,13 @@ import { addUser } from 'network/user'
 export default {
   name: 'AddUser',
   data() {
+    const mobileValidator = (rule, value, callback) => {
+      const re = /^1\d{10}$/
+      if (re.test(value)) {
+        return callback()
+      }
+      return callback(new Error('请输入正确手机号'))
+    }
     return {
       userParams: {
         username: '',
@@ -75,8 +82,7 @@ export default {
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ],
         mobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' },
-          { min: 11, max: 11, message: '请输入正确的号码', trigger: 'blur' }
+          { validator: mobileValidator, trigger: 'blur' }
         ]
       }// 添加用户dialog控制
     }

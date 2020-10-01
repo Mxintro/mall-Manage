@@ -18,10 +18,10 @@
         </el-input>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" @click="dialogVisible = true">添加用户</el-button>
+        <el-button type="primary" @click="addUserVisible = true">添加用户</el-button>
         <!-- 添加用户 -->
         <add-user
-          :dialogVisible="dialogVisible"
+          :dialogVisible="addUserVisible"
           @cancelClick="addCancel"
           @addUser="addUser"></add-user>
       </el-col>
@@ -49,16 +49,17 @@
       </el-table-column>
       <el-table-column prop="id" label="操作" width="175px">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" size="mini">
-            <edit-user
-              :dialogVisible="editUserVisible"
-              @cancelClick="editHide"
-              @editUser="editUser(scope.row)"></edit-user>
-          </el-button>
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="editUserShow(scope.row)"></el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
           <el-tooltip content="Top center" placement="top" :enterable="false">
             <el-button type="warning" icon="el-icon-star-off" size="mini"></el-button>
           </el-tooltip>
+          <edit-user
+            :editUserInfo="editUserInfo"
+            :dialogVisible="editId===scope.row.id ? editUserVisible : false"
+            @cancelClick="editHide"
+            @editUser="editUser($event, scope.row)">
+          </edit-user>
         </template>
       </el-table-column>
     </el-table>
@@ -98,7 +99,9 @@ export default {
       pageNum: 1,
       userList: [],
       addUserVisible: false,
-      editUserVisible: false
+      editUserVisible: false,
+      editId: '',
+      editUserInfo: {}
     }
   },
   components: {
@@ -133,14 +136,21 @@ export default {
     addUser(data) {
       this.userList.unshift(data)
       this.getUserInfo()
-      this.dialogVisible = false
+      this.addUserVisible = false
     },
     addCancel() {
-      this.dialogVisible = false
+      this.addUserVisible = false
     },
-    editUser(userRow) {
+    editUser(data, row) {
       // this.userList.find(item => item.)
-      userRow = $event
+      row.email = data.email
+      row.mobile = data.mobile
+      this.editUserVisible = false
+    },
+    editUserShow(row) {
+      this.editId = row.id
+      this.editUserInfo = row
+      this.editUserVisible = true
     },
     editHide() {
       this.editUserVisible = false

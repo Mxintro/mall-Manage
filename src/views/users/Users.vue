@@ -157,13 +157,24 @@ export default {
       this.editUserVisible = false
     },
     deleteUser(row) {
-      deleteUser(row.id).then(() => {
-        this.$message.success('删除成功')
-        const index = this.userList.indexOf(this.userList.find(item => item.id === row.id))
-        this.userList.splice(index, 1)
-        this.totalPage--
-      }).catch(error => {
-        this.$message.error(error)
+      this.$confirm('此操作将永久删除该账号, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteUser(row.id).then(() => {
+          this.$message.success('删除成功')
+          const index = this.userList.indexOf(this.userList.find(item => item.id === row.id))
+          this.userList.splice(index, 1)
+          this.totalPage--
+        }).catch(error => {
+          this.$message.error(error)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }

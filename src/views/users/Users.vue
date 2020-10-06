@@ -18,9 +18,9 @@
           <el-button slot="append" icon="el-icon-search" @click="getUserInfo"></el-button>
         </el-input>
       </el-col>
+        <!-- 添加用户 -->
       <el-col :span="4">
         <el-button type="primary" @click="addUserVisible = true">添加用户</el-button>
-        <!-- 添加用户 -->
         <add-user
           :dialogVisible="addUserVisible"
           @cancelClick="addCancel"

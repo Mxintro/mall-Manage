@@ -93,7 +93,7 @@ export default {
   },
   watch: {
     editUserInfo() {
-      this.userParams = this.editUserInfo
+      this.userParams = {...this.editUserInfo}
     }
   }
 }

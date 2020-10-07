@@ -6,7 +6,12 @@
     <el-breadcrumb-item>权限列表</el-breadcrumb-item>
   </el-breadcrumb>
   <!-- 添加角色 -->
-  <el-button type="primary" @click="addUserVisible = true">添加角色</el-button>
+  <el-button type="primary" @click="addRolesVisible = true">添加角色</el-button>
+  <roles-add
+    :dialogVisible="addRolesVisible"
+    @addDone="rolesList.unshift($event)"
+    @cancelClick="addRolesVisible = false">
+    </roles-add>
   <!-- 权限列表 -->
   <el-table
     :data="rolesList"
@@ -43,6 +48,7 @@
 import { getRoles } from 'network/rights'
 
 import RolesEdit from './childComps/RolesEdit'
+import RolesAdd from './childComps/RolesAdd'
 
 export default {
   name: 'Roles',
@@ -50,12 +56,14 @@ export default {
     return {
       rolesList: [],
       editInfo: {},
+      addRolesVisible: false,
       editVisible: false,
       editId: ''
     }
   },
   components: {
-    RolesEdit
+    RolesEdit,
+    RolesAdd
   },
   created() {
     this.getRolesList()
@@ -78,6 +86,9 @@ export default {
       row.roleName = data.roleName
       row.roleDesc = data.roleDesc
       this.editVisible = false
+    },
+    addRoles(data) {
+      this.rolesList.unshift(data)
     }
   }
 }
@@ -88,5 +99,8 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+}
+.el-button {
+  margin-top: 10px;
 }
 </style>

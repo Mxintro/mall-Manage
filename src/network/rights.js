@@ -11,3 +11,7 @@ export function getRoles() {
 export function editRoles(params) {
   return instance.put(`/roles/${params.id}`, params)
 }
+
+export function addRoles(params) {
+  return instance.post('roles/', params)
+}

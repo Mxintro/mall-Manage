@@ -7,28 +7,22 @@
       destroy-on-close
       width="40%">
         <el-form
-        :model="editParams"
+        :model="addParams"
         label-width="80px"
       >
-        <el-form-item label="id">
-          <el-input
-            v-model="editParams.id"
-            disabled
-          ></el-input>
-        </el-form-item>
         <el-form-item label="角色名称">
           <el-input
-            v-model="editParams.roleName"
+            v-model="addParams.roleName"
           ></el-input>
         </el-form-item>
         <el-form-item label="角色描述">
           <el-input
-            v-model="editParams.roleDesc"
-            @keyup.enter.native.prevent="editSummit"
+            v-model="addParams.roleDesc"
+            @keyup.enter.native.prevent="addSumit"
           ></el-input>
         </el-form-item>
         <el-form-item label-position="right" class="submit-button">
-          <el-button type="primary" @click="editSummit">提交</el-button>
+          <el-button type="primary" @click="addSumit">提交</el-button>
           <el-button type="primary" @click="cancelClick">取消</el-button>
         </el-form-item>
       </el-form>
@@ -37,43 +31,36 @@
 </template>
 
 <script>
-import { editRoles } from 'network/rights'
+import { addRoles } from 'network/rights'
 
 export default {
-  name: 'RolesEdit',
+  name: 'RolesAdd',
   data() {
     return {
-      editParams: {}
+      addParams: {
+        roleName: '',
+        roleDesc: ''
+      }
     }
   },
   props: {
-    editInfo: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
     dialogVisible: {
       type: Boolean,
       default: false
     }
   },
   methods: {
-    editSummit() {
-      editRoles(this.editParams).then(res => {
+    addSumit() {
+      addRoles(this.addParams).then(res => {
         this.$message.success('修改成功')
-        this.$emit('editDone', res.data)
+        this.$emit('addDone', res.data)
+        this.$emit('cancelClick')
       }).catch(error => {
         this.$message({ message: error, type: 'error'})
       })
     },
     cancelClick() {
       this.$emit('cancelClick')
-    }
-  },
-  watch: {
-    editInfo() {
-      this.editParams = {...this.editInfo}// editInfo指向row，解构赋值=深拷贝
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="修改用户权限"
+      title="添加角色"
       :visible="dialogVisible"
       @update:visible = "cancelClick"
       destroy-on-close

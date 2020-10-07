@@ -61,6 +61,7 @@
             @cancelClick="editHide"
             @editUser="editUser($event, scope.row)">
           </edit-user>
+          <!-- 通过$event传递子组件传出来的值 -->
         </template>
       </el-table-column>
     </el-table>
@@ -137,7 +138,7 @@ export default {
     },
     addUser(data) {
       this.userList.unshift(data)
-      this.getUserInfo()
+      // this.getUserInfo()
       this.addUserVisible = false
     },
     addCancel() {

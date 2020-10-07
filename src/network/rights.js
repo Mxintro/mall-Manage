@@ -15,3 +15,7 @@ export function editRoles(params) {
 export function addRoles(params) {
   return instance.post('roles/', params)
 }
+
+export function deleteRoleRight(roleId, rightId) {
+  return instance.delete(`roles/${roleId}/rights/${rightId}`)
+}

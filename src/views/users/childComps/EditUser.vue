@@ -101,4 +101,7 @@ export default {
 </script>
 
 <style scoped>
+.el-col {
+  margin-top: 7px;
+}
 </style>

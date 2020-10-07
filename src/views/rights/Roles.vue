@@ -19,12 +19,58 @@
     v-if="rolesList.length > 0"
     style="width: 100%">
     <!-- 展开列 -->
-    <el-table-column type="expand"></el-table-column>
+    <el-table-column type="expand">
+      <template slot-scope="scope">
+        <el-row
+          class="v-center"
+          :class="['bd-bottom', index1===0 ? 'bd-top' : '']"
+          v-for="(item1, index1) in scope.row.children"
+          :key="item1.id">
+          <!-- 以及权限 -->
+          <el-col :span="5">
+            <el-tag
+              closable
+              @close="deleteRoleRight(scope.row, item1.id)">{{item1.authName}}</el-tag>
+            <i class="el-icon-caret-right"></i>
+          </el-col>
+          <!-- 二级权限  -->
+          <!-- 三级权限   -->
+          <el-col :span="19">
+            <el-row
+              class="v-center"
+              :class="[index2===0 ? '' : 'bd-top']"
+              v-for="(item2, index2) in item1.children"
+              :key="item2.id">
+              <!-- 二级权限 -->
+              <el-col :span="6">
+                <el-tag
+                  type="success"
+                  closable
+                  @close="deleteRoleRight(scope.row, item2.id)">{{item2.authName}}</el-tag>
+                <i class="el-icon-caret-right"></i>
+                </el-col>
+                <!-- 三级权限 -->
+              <el-col :span="18">
+                <el-tag
+                  type="warning"
+                  closable
+                  @close="deleteRoleRight(scope.row, item3.id)"
+                  :class="[index3===0 ? '' : 'bd-top']"
+                  v-for="(item3, index3) in item2.children"
+                  :key="item3.id">
+                  {{item3.authName}}
+                </el-tag>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </template>
+    </el-table-column>
     <!-- 用户列 -->
     <el-table-column type="index"></el-table-column>
     <el-table-column prop="roleName" label="角色名称"></el-table-column>
     <el-table-column prop="roleDesc" label="角色描述"></el-table-column>
-    <el-table-column prop="id" label="操作" width="290px" class="">
+    <el-table-column label="操作" width="290px" class="">
       <template slot-scope="scope">
         <div class="handle-bts">
           <el-button type="primary" icon="el-icon-edit" size="mini" @click="editRole(scope.row)">编辑</el-button>
@@ -45,7 +91,7 @@
 </template>
 
 <script>
-import { getRoles } from 'network/rights'
+import { getRoles, deleteRoleRight } from 'network/rights'
 
 import RolesEdit from './childComps/RolesEdit'
 import RolesAdd from './childComps/RolesAdd'
@@ -87,8 +133,20 @@ export default {
       row.roleDesc = data.roleDesc
       this.editVisible = false
     },
-    addRoles(data) {
-      this.rolesList.unshift(data)
+    deleteRoleRight(role, rightId) {
+      this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteRoleRight(role.id, rightId).then(res => {
+          this.$message.success('删除成功')
+          role.children = res.data
+          console.log(role)
+        }).catch(error => {
+          this.$message.error(error)
+        })
+      })
     }
   }
 }
@@ -101,6 +159,19 @@ export default {
   justify-content: space-between;
 }
 .el-button {
-  margin-top: 10px;
+  margin: 10px;
+}
+.el-tag {
+  margin: 7px;
+}
+.bd-top {
+  border-top: 1px solid #eee;
+}
+.bd-bottom {
+  border-bottom: 1px solid #eee;
+}
+.v-center {
+  display: flex;
+  align-items: center;
 }
 </style>

@@ -30,7 +30,9 @@
           <el-col :span="5">
             <el-tag
               closable
-              @close="deleteRoleRight(scope.row, item1.id)">{{item1.authName}}</el-tag>
+              @close="deleteRoleRight(scope.row, item1.id)">
+              {{item1.authName}}
+              {{item1.id}}</el-tag>
             <i class="el-icon-caret-right"></i>
           </el-col>
           <!-- 二级权限  -->
@@ -46,7 +48,9 @@
                 <el-tag
                   type="success"
                   closable
-                  @close="deleteRoleRight(scope.row, item2.id)">{{item2.authName}}</el-tag>
+                  @close="deleteRoleRight(scope.row, item2.id)">
+                  {{item2.authName}}
+                  {{item2.id}}</el-tag>
                 <i class="el-icon-caret-right"></i>
                 </el-col>
                 <!-- 三级权限 -->
@@ -58,7 +62,7 @@
                   :class="[index3===0 ? '' : 'bd-top']"
                   v-for="(item3, index3) in item2.children"
                   :key="item3.id">
-                  {{item3.authName}}
+                  {{item3.authName}}{{item3.id}}
                 </el-tag>
               </el-col>
             </el-row>
@@ -75,7 +79,7 @@
         <div class="handle-bts">
           <el-button type="primary" icon="el-icon-edit" size="mini" @click="editRole(scope.row)">编辑</el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteRole(scope.row)">删除</el-button>
-          <el-button type="warning" icon="el-icon-star-off" size="mini">分配权限</el-button>
+          <el-button type="warning" icon="el-icon-star-off" size="mini" @click="getRoleRights(scope.row)">分配权限</el-button>
         </div>
           <!-- 权限编辑 -->
         <roles-edit
@@ -87,6 +91,14 @@
       </template>
     </el-table-column>
   </el-table>
+  <!-- 权限分配   -->
+  <rights-set
+    :roleId="roleId"
+    :checkKeys="currentRights"
+    :setRightsVisible="setRightsVisible"
+    @roleRightsSet="roleRightsSet"
+    @cancelClick="rightsSetClose">
+  </rights-set>
 </div>
 </template>
 
@@ -95,6 +107,7 @@ import { getRoles, deleteRoleRight } from 'network/rights'
 
 import RolesEdit from './childComps/RolesEdit'
 import RolesAdd from './childComps/RolesAdd'
+import RightsSet from './childComps/RightsSet'
 
 export default {
   name: 'Roles',
@@ -104,12 +117,16 @@ export default {
       editInfo: {},
       addRolesVisible: false,
       editVisible: false,
-      editId: ''
+      setRightsVisible: false,
+      editId: '',
+      currentRights: [],
+      roleId: 0
     }
   },
   components: {
     RolesEdit,
-    RolesAdd
+    RolesAdd,
+    RightsSet
   },
   created() {
     this.getRolesList()
@@ -147,6 +164,28 @@ export default {
           this.$message.error(error)
         })
       })
+    },
+    getRoleRights(row) {
+      this.roleId = row.id
+      const rights = []
+      function getId(item) {
+        if (!Object.prototype.hasOwnProperty.call(item, 'children')) return rights.push(item.id)
+        item.children.forEach(el => {
+          getId(el)
+        })
+      }
+      getId(row)
+      this.currentRights = rights
+      console.log(this.currentRights)
+      this.setRightsVisible = true
+    },
+    roleRightsSet() {
+      this.getRolesList()
+      this.rightsSetClose()
+    },
+    rightsSetClose() {
+      this.setRightsVisible = false
+      this.currentRights = []
     }
   }
 }
@@ -158,9 +197,7 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-.el-button {
-  margin: 10px;
-}
+
 .el-tag {
   margin: 7px;
 }

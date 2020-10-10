@@ -2,6 +2,7 @@
   <div>
     <el-dialog
     title="权限分配"
+    destroy-on-close
     :visible="dialogVisible"
     @update:visible = "cancelClick"
     width="40%">

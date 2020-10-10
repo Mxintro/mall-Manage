@@ -52,8 +52,8 @@
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="mini" @click="editUserShow(scope.row)"></el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUser(scope.row)"></el-button>
-          <el-tooltip content="Top center" placement="top" :enterable="false">
-            <el-button type="warning" icon="el-icon-star-off" size="mini"></el-button>
+          <el-tooltip content="角色分配" placement="top" :enterable="false">
+            <el-button type="warning" icon="el-icon-star-off" size="mini" @click="setRole(scope.row)"></el-button>
           </el-tooltip>
           <edit-user
             :editUserInfo="editUserInfo"
@@ -68,16 +68,22 @@
 
     <!-- 分页 -->
     <div class="block">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pageNum"
-          :page-sizes="[2, 4, 5, 10]"
-          :page-size="queryParams.pagesize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="totalPage">
-        </el-pagination>
-      </div>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNum"
+        :page-sizes="[2, 4, 5, 10]"
+        :page-size="queryParams.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalPage">
+      </el-pagination>
+    </div>
+    <!-- 角色分配 -->
+  <set-role
+    :userInfo="userInfo"
+    :dialogVisible="setRoleVisible"
+    @newRole="gotNewRole"
+    @cancelClick="setRoleCancel"></set-role>
   </el-card>
 </div>
 </template>
@@ -85,6 +91,7 @@
 <script>
 import AddUser from './childComps/AddUser'
 import EditUser from './childComps/EditUser'
+import SetRole from './childComps/SetRole'
 
 import { getUsers, userStateChange, deleteUser } from 'network/user'
 
@@ -103,12 +110,15 @@ export default {
       addUserVisible: false,
       editUserVisible: false,
       editId: '',
-      editUserInfo: {}
+      editUserInfo: {},
+      userInfo: {},
+      setRoleVisible: false
     }
   },
   components: {
     AddUser,
-    EditUser
+    EditUser,
+    SetRole
   },
   created() {
     this.getUserInfo()
@@ -148,7 +158,7 @@ export default {
       // this.userList.find(item => item.)
       row.email = data.email
       row.mobile = data.mobile
-      this.editUserVisible = false
+      this.editHide()
     },
     editUserShow(row) {
       this.editId = row.id
@@ -178,6 +188,17 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    setRole(user) {
+      this.userInfo = user
+      this.setRoleVisible = true
+    },
+    gotNewRole(data) {
+      this.userInfo.roleName = data.roleName
+      this.setRoleCancel()
+    },
+    setRoleCancel() {
+      this.setRoleVisible = false
     }
   }
 }

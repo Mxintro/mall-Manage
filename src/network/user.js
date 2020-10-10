@@ -19,3 +19,7 @@ export function editUser({id, email, mobile}) {
 export function deleteUser(id) {
   return instance.delete(`/users/${id}`)
 }
+
+export function setUserRloe(id, rid) {
+  return instance.put(`users/${id}/role`, {rid: rid})
+}

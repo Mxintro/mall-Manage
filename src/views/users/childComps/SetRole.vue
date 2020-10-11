@@ -6,19 +6,21 @@
     :visible="dialogVisible"
     @update:visible = "cancelClick"
     destroy-on-close
-    width="30%">
+    width="25%">
     <p>用户名：{{userInfo.username}}</p>
-    <p>角色：{{userInfo.role_name}}</p>
-    <el-select v-model="selectedRole" placeholder="请选择">
-      <el-option
-        v-for="item in rolesList"
-        :key="item.id"
-        :label="item.roleName"
-        :value="item.id">
-      </el-option>
-    </el-select>
-    <el-button type="primary" @click="setRole">提交</el-button>
-    <el-button type="primary" @click="cancelClick">取消</el-button>
+    <p>当前角色：{{userInfo.role_name}}</p>
+    <div class="role-select">
+      <el-select v-model="selectedRole" placeholder="请选择">
+        <el-option
+          v-for="item in rolesList"
+          :key="item.id"
+          :label="item.roleName"
+          :value="item.id">
+        </el-option>
+      </el-select>
+      <el-button type="primary" @click="setRole">提交</el-button>
+      <el-button type="primary" @click="cancelClick">取消</el-button>
+    </div>
   </el-dialog>
 </div>
 </template>
@@ -68,6 +70,7 @@ export default {
       setUserRloe(this.userInfo.id, this.selectedRole).then(res => {
         const newUser = this.rolesList.find(item => item.id === res.data.rid)
         this.$emit('newRole', newUser)
+        this.$message({type: 'success', message: '角色分配成功'})
       }).catch(error => {
         this.$message({type: 'error', message: error})
       })
@@ -78,4 +81,11 @@ export default {
 </script>
 
 <style scoped>
+.el-dialog p {
+  margin: 10px 0;
+}
+.role-select {
+  display: flex;
+  justify-content: space-between;
+}
 </style>

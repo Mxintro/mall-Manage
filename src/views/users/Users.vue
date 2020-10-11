@@ -194,7 +194,8 @@ export default {
       this.setRoleVisible = true
     },
     gotNewRole(data) {
-      this.userInfo.roleName = data.roleName
+      console.log(data)
+      this.userInfo.role_name = data.roleName
       this.setRoleCancel()
     },
     setRoleCancel() {

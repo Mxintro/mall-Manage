@@ -19,7 +19,6 @@
         </el-option>
       </el-select>
       <el-button type="primary" @click="setRole">提交</el-button>
-      <el-button type="primary" @click="cancelClick">取消</el-button>
     </div>
   </el-dialog>
 </div>
@@ -85,6 +84,7 @@ export default {
   margin: 10px 0;
 }
 .role-select {
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }

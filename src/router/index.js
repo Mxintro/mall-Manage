@@ -8,6 +8,7 @@ const Users = () => import('views/users/Users')
 const Login = () => import('views/login/Login')
 const Rights = () => import('views/rights/Rights')
 const Roles = () => import('views/rights/Roles')
+const Cate = () => import('views/goods_cate/Cate')
 
 const routes = [
   { path: '/', component: Home },
@@ -19,7 +20,8 @@ const routes = [
     children: [
       { path: '/users', component: Users},
       { path: '/rights', component: Rights},
-      { path: '/roles', component: Roles}
+      { path: '/roles', component: Roles},
+      { path: '/categories', component: Cate}
     ]
   }
 ]

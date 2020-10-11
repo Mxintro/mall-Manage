@@ -6,7 +6,7 @@
     <el-breadcrumb-item>用户管理</el-breadcrumb-item>
     <el-breadcrumb-item>用户列表</el-breadcrumb-item>
   </el-breadcrumb>
-  <el-card class="box-card">
+  <el-card>
     <!-- 搜索 -->
     <el-row :gutter="20">
       <el-col :span="8">

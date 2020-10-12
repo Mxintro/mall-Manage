@@ -35,3 +35,8 @@ body {
   margin-top: 15px;
   font-size: 12px;
 }
+
+/* 解决cascader下拉选择过高问题 */
+.el-cascader-panel {
+  height: 200px;
+}

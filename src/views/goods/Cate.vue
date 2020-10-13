@@ -207,6 +207,9 @@ export default {
       this.$refs.addCate.resetFields()
       this.selectedKeys = []
       this.addCateInfo.cat_name = ''
+    },
+    addFormReset() {
+      this.$refs.attrForm.resetFields()
     }
   }
 }

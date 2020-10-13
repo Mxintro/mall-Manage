@@ -8,7 +8,8 @@ const Users = () => import('views/users/Users')
 const Login = () => import('views/login/Login')
 const Rights = () => import('views/rights/Rights')
 const Roles = () => import('views/rights/Roles')
-const Cate = () => import('views/goods_cate/Cate')
+const Cate = () => import('views/goods/Cate')
+const Params = () => import('views/goods/Params')
 
 const routes = [
   { path: '/', component: Home },
@@ -21,7 +22,8 @@ const routes = [
       { path: '/users', component: Users},
       { path: '/rights', component: Rights},
       { path: '/roles', component: Roles},
-      { path: '/categories', component: Cate}
+      { path: '/categories', component: Cate},
+      { path: '/params', component: Params}
     ]
   }
 ]

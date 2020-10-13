@@ -48,6 +48,8 @@
   <!-- 添加分类对话框 -->
   <el-dialog
     title="添加分类"
+    destroy-on-close
+    @closed="addCateClose"
     :visible.sync="addCateVisible"
     width="30%">
     <el-form :model="addCateInfo" ref="addCate" label-width="100px" class="demo-ruleForm">
@@ -74,7 +76,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="addNewCate()">提交</el-button>
-        <el-button>重置</el-button>
+        <el-button @click="addCateVisible = false">取消</el-button>
       </el-form-item>
     </el-form>
 </el-dialog>
@@ -191,6 +193,7 @@ export default {
           type: 'success',
           message: '新分类添加成功'
         })
+        this.getCate()
         this.addCateVisible = false
       }).catch(error => {
         this.$message({
@@ -198,6 +201,12 @@ export default {
           message: error
         })
       })
+    },
+    addCateClose() {
+      this.addCateVisible = false
+      this.$refs.addCate.resetFields()
+      this.selectedKeys = []
+      this.addCateInfo.cat_name = ''
     }
   }
 }

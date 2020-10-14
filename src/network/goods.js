@@ -15,3 +15,11 @@ export function getGoodsAttributes(id, sel) {
 export function addGoodsAttr(id, params) {
   return instance.post(`/categories/${id}/attributes`, params)
 }
+
+export function editGoodAttr(params) {
+  return instance.put(`/categories/${params.id}/attributes/${params.attr_id}`, params)
+}
+
+export function deleteGoodAttr(id, attrId) {
+  return instance.delete(`/categories/${id}/attributes/${attrId}`)
+}

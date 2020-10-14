@@ -33,18 +33,45 @@
         <el-button type="primary" size="mini" :disabled="isBtnDisabled" @click="addAttrVisible = true">添加属性</el-button>
       </el-tab-pane>
     </el-tabs>
+    <!-- 参数列表 -->
     <el-table
-      :data="AttrList"
+      :data="attrList"
       border
-      v-if="AttrList.length > 0"
+      @expand-change="arrayAttrvals"
+      v-if="attrList.length > 0"
       style="width: 100%">
-      <el-table-column type="expand"></el-table-column>
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <el-tag
+           closable
+           v-for="(item, index) in scope.row.attr_vals"
+           @close="deleteVals(scope.row, index)"
+           :key="index">
+           {{item}}
+          </el-tag>
+          <el-input
+            :key="scope.row.attr_id"
+            class="input-new-tag"
+            v-if="inputValVisible === scope.row.attr_id"
+            v-model="newVal"
+            ref="saveTagInput"
+            size="small"
+            @keyup.enter.native="handleInputConfirm(scope.attr.row)"
+            @blur="handleInputConfirm(scope.row)"
+          >
+          </el-input>
+          <el-button
+            v-else class="button-new-tag"
+            size="small"
+            @click="showValInput(scope.row.attr_id)">+ New Tag</el-button>
+        </template>
+      </el-table-column>
       <el-table-column type="index"></el-table-column>
       <el-table-column prop="attr_name" label="参数名称"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" size="mini" @click="editAttr(scope.row)">编辑</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteAtrr(scope.row)">删除</el-button>
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click()="editAttrShow(scope.row)">编辑</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteAtrrShow(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -78,11 +105,40 @@
       <el-button type="primary" @click="addAttr">确 定</el-button>
     </span>
   </el-dialog>
+  <!-- 修改属性 -->
+  <el-dialog
+    title="修改参数"
+    :visible.sync="editAttrVisible"
+    @close="editFormReset"
+    width="40%">
+    <!-- 当form只有一行时按回车键会自动提交表单  @submit.native.prevent解决-->
+    <el-form
+      width="100%"
+      ref="editForm"
+      :model="editAttrInfo"
+      @submit.native.prevent>
+      <el-form-item
+        label="请输入参数名称："
+        prop="attr_name"
+        :rules="[
+          { required: true, message: '请修改输入参数'}
+        ]">
+        <el-input
+          v-model="editAttrInfo.attr_name"
+          @keyup.enter.native.prevent = 'editAttr'
+          ></el-input>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="addAttrVisible = false">取 消</el-button>
+      <el-button type="primary" @click="editAttr">确 定</el-button>
+    </span>
+  </el-dialog>
 </div>
 </template>
 
 <script>
-import { getGoodsCate, getGoodsAttributes, addGoodsAttr } from 'network/goods'
+import { getGoodsCate, getGoodsAttributes, addGoodsAttr, editGoodAttr, deleteGoodAttr } from 'network/goods'
 
 export default {
   name: 'Params',
@@ -92,7 +148,7 @@ export default {
       parentCateList: [],
       quryInfoId: '',
       activeSel: 'many',
-      AttrList: [],
+      attrList: [],
       sel: 'many',
       addAttrVisible: false,
       addAttrInfo: {
@@ -100,7 +156,18 @@ export default {
         attr_sel: '',
         attr_vals: ''
       },
-      shitEvent: []
+      shitEvent: [],
+      editAttrInfo: {
+        id: '',
+        attrId: '',
+        attr_name: '',
+        attr_sel: '',
+        attr_vals: ''
+      },
+      attrRow: {},
+      editAttrVisible: false,
+      inputValVisible: 0,
+      newVal: ''
     }
   },
   created() {
@@ -135,7 +202,7 @@ export default {
     },
     getGoodsAttrs() {
       getGoodsAttributes(this.quryInfoId, this.sel).then(res => {
-        this.AttrList = res.data
+        this.attrList = res.data
       }).catch(error => {
         this.$message({
           type: 'error',
@@ -171,7 +238,7 @@ export default {
           this.addAttrInfo.attr_sel = this.sel
           addGoodsAttr(this.quryInfoId, this.addAttrInfo).then(res => {
             console.log(res.data)
-            this.AttrList.unshift(res.data)
+            this.attrList.unshift(res.data)
             this.addAttrVisible = false
             this.$message({
               type: 'success',
@@ -192,11 +259,111 @@ export default {
         }
       })
     },
-    editAttr(attr) {
-      console.log(attr)
+    editAttrShow(attr) {
+      this.editAttrInfo = { ...attr }
+      this.attrRow = attr
+      this.editAttrInfo.id = this.quryInfoId
+      this.editAttrVisible = true
     },
-    deleteAtrr(attr) {
-      console.log(attr)
+    editAttr() {
+      this.$refs.editForm.validate((valid) => {
+        console.log(valid)
+        if (valid) {
+          editGoodAttr(this.editAttrInfo).then(res => {
+            console.log(res.data)
+            this.attrRow.attr_name = res.data.attr_name
+            this.editAttrVisible = false
+            this.$message({
+              type: 'success',
+              message: '修改成功'
+            })
+          }).catch(error => {
+            this.$message({
+              type: 'error',
+              message: error
+            })
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '请输入参数'
+          })
+          return false
+        }
+      })
+    },
+    deleteAtrrShow(scope) {
+      this.$confirm('此操作将永久删除该参数, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteGoodAttr(this.quryInfoId, scope.row.attr_id).then(() => {
+          this.$message.success('删除成功')
+          this.attrList.splice(scope.$index, 1)
+        }).catch(error => {
+          this.$message.error(error)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    editFormReset() {
+      this.$refs.editForm.resetFields()
+    },
+    arrayAttrvals(row) {
+      if (typeof (row.attr_vals) === 'string') {
+        row.attr_vals = row.attr_vals ? row.attr_vals.split(' ') : []
+      }
+    },
+    showValInput(id) {
+      this.inputValVisible = id
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    handleInputConfirm(row) {
+      const newVal = this.newVal
+      // const vals = row.attr_vals
+      if (newVal) {
+        this.handleValsChange(row, newVal).then(_ => {
+          row.attr_vals.push(newVal)
+        }).catch(error => {
+          this.$message({
+            type: 'error',
+            message: error
+          })
+        })
+      }
+      this.inputValVisible = false
+      this.newVal = ''
+    },
+    deleteVals(row, index) {
+      const newRow = { ...row }
+      newRow.attr_vals.splice(index, 1)
+      this.handleValsChange(newRow).then(_ => {
+        row.attr_vals.splice(index, 1)
+      }).catch(error => {
+        this.$message({
+          type: 'error',
+          message: error
+        })
+      })
+    },
+    handleValsChange(row, newVal) {
+      this.editAttrInfo = { ...row }
+      if (row.attr_vals.length > 0) {
+        this.editAttrInfo.attr_vals = row.attr_vals.join(' ') + (newVal ? ' ' + newVal : '')
+      } else {
+        this.editAttrInfo.attr_vals = newVal
+      }
+      console.log(this.editAttrInfo.attr_vals)
+      this.editAttrInfo.id = this.quryInfoId
+
+      return editGoodAttr(this.editAttrInfo)
     }
   }
 }
@@ -209,5 +376,8 @@ export default {
 }
 .el-tabs {
   margin-top: 20px;
+}
+.el-tag {
+  margin: 5px;
 }
 </style>

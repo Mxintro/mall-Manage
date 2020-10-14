@@ -55,17 +55,22 @@
     :visible.sync="addAttrVisible"
     @close="addFormReset"
     width="40%">
+    <!-- 当form只有一行时按回车键会自动提交表单  @submit.native.prevent解决-->
     <el-form
       width="100%"
       ref="attrForm"
-      :model="addAttrInfo">
+      :model="addAttrInfo"
+      @submit.native.prevent>
       <el-form-item
         prop="attr_name"
         label="请输入参数名称："
         :rules="[
           { required: true, mini: 1, message: '请输入参数'}
         ]">
-        <el-input v-model="addAttrInfo.attr_name"></el-input>
+        <el-input
+          v-model="addAttrInfo.attr_name"
+          @keyup.enter.native.prevent = 'addAttr'
+          ></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">

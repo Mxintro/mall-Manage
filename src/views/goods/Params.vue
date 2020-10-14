@@ -215,6 +215,7 @@ export default {
         this.quryInfoId = value[value.length - 1]
         this.getGoodsAttrs()
       }
+      this.attrList = []
       console.log(value)
     },
     paramTypeClick(tab) {

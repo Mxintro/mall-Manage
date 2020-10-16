@@ -10,6 +10,8 @@ const Rights = () => import('views/rights/Rights')
 const Roles = () => import('views/rights/Roles')
 const Cate = () => import('views/goods/Cate')
 const Params = () => import('views/goods/Params')
+const GoodsList = () => import('views/goods/GoodsList')
+const AddGoods = () => import('views/goods/AddGoods')
 
 const routes = [
   { path: '/', component: Home },
@@ -19,11 +21,13 @@ const routes = [
     name: 'Home',
     component: Home,
     children: [
-      { path: '/users', component: Users},
-      { path: '/rights', component: Rights},
-      { path: '/roles', component: Roles},
-      { path: '/categories', component: Cate},
-      { path: '/params', component: Params}
+      { path: '/users', component: Users },
+      { path: '/rights', component: Rights },
+      { path: '/roles', component: Roles },
+      { path: '/categories', component: Cate },
+      { path: '/params', component: Params },
+      { path: '/goods', component: GoodsList },
+      { path: '/goods/add', component: AddGoods }
     ]
   }
 ]

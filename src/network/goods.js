@@ -23,3 +23,7 @@ export function editGoodAttr(params) {
 export function deleteGoodAttr(id, attrId) {
   return instance.delete(`/categories/${id}/attributes/${attrId}`)
 }
+
+export function getGoodsList(params) {
+  return instance.get('/goods', { params: params })
+}

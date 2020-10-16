@@ -34,6 +34,7 @@
         <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
       </template>
     </tree-table>
+    <!-- 分页 -->
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"

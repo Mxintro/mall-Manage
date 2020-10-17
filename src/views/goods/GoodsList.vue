@@ -101,7 +101,7 @@ export default {
       }
     },
     goToAddPage() {
-      this.$router.replace({path: '/goods/add'})
+      this.$router.push({path: '/goods/add'})
     },
     handleSizeChange(newSize) {
       this.goodsListQuery.pagesize = newSize

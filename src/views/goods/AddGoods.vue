@@ -49,10 +49,8 @@
                 value:'cat_id' }"
               @change="handleChange"></el-cascader>
           </el-form-item>
-          <!-- <el-form-item prop="goods_introduce" label="介绍:">
-            <el-input v-model="addGoodInfo.goods_introduce"></el-input>
-          </el-form-item> -->
         </el-tab-pane>
+        <!-- 商品参数 -->
         <el-tab-pane label="商品参数">
           <el-form-item
             v-for="(many, index1) in manyAttrList"
@@ -66,6 +64,7 @@
             </el-checkbox-group>
           </el-form-item>
         </el-tab-pane>
+        <!-- 商品属性 -->
         <el-tab-pane label="商品属性">
           <el-form-item
             v-for="(only, index2) in onlyAttrList"
@@ -74,14 +73,27 @@
             <el-input v-model="only.attr_vals"></el-input>
           </el-form-item>
         </el-tab-pane>
-        <el-tab-pane label="商品图片">商品图片
-          <el-form-item prop="pics" label="添加图片:">
-          </el-form-item>
+        <!-- 商品图片 -->
+        <el-tab-pane label="商品图片">
+          <el-upload
+            :action="uploadUrl"
+            :headers="imgHeaders"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-success="imgUploaded"
+            list-type="picture">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
         </el-tab-pane>
         <el-tab-pane label="商品内容">商品内容</el-tab-pane>
       </el-tabs>
     </el-form>
   </el-card>
+  <el-dialog
+    :visible.sync="imgAttrVisible">
+    <img :src="previewImg" alt="">
+  </el-dialog>
 </div>
 </template>
 
@@ -110,6 +122,13 @@ export default {
       manyAttrList: [],
       checkboxGroup: [],
       parentCateList: [],
+      uploadUrl: 'http://127.0.0.1:8888/api/private/v1/upload',
+      imgHeaders: {
+        Authorization: window.sessionStorage.getItem('token')
+      },
+      imgList: [],
+      imgAttrVisible: false,
+      previewImg: '',
       addGoodRule: {
         goods_name: [
           { required: true, message: '请输入商品名称', trigger: 'blur' }
@@ -148,11 +167,8 @@ export default {
       })
     },
     getGoodsAttrs(list) {
-      getGoodsAttributes(this.quryInfoId, this.sel).then(res => {
+      return getGoodsAttributes(this.quryInfoId, this.sel).then(res => {
         this[list] = res.data
-        this[list].forEach(item => {
-          item.attr_vals = item.attr_vals.split(' ')
-        })
       }).catch(error => {
         this.$message({
           type: 'error',
@@ -168,23 +184,40 @@ export default {
         this.addGoodInfo.goods_cat = []
       }
     },
-    stepConfirm(activeName, oldActiveName) {
+    async stepConfirm(activeName, oldActiveName) {
       if (this.addGoodInfo.goods_cat.length !== 3 && oldActiveName === '0') {
         this.$message({type: 'error', message: '请选择商品分类'})
         return false
       }
       if (activeName === '1' && !this.gotAttr) {
         this.sel = 'many'
-        this.manyAttrList = this.getGoodsAttrs('manyAttrList')
+        this.getGoodsAttrs('manyAttrList').then(_ => {
+          this.manyAttrList.forEach(item => {
+            console.log(item)
+            item.attr_vals = item.attr_vals.split(' ')
+          })
+        })
+
         this.addGoodInfo.attrs = this.manyAttrList
-        console.log(this.addGoodInfo.attrs)
         this.sel = 'only'
-        this.onlyAttrList = this.getGoodsAttrs('onlyAttrList')
+        this.getGoodsAttrs('onlyAttrList')
         this.gotAttr = true
       }
     },
     cheackGroupChange(value) {
       console.log(this.manyAttrList)
+    },
+    imgUploaded(response, file, fileList) {
+      console.log(response, file, fileList)
+      this.imgList.push(response.data.tmp_path)
+    },
+    handleRemove(file) {
+      const index = this.imgList.findIndex(item => item.tmp_path === file.response.data.tmp_path)
+      this.imgList.splice(index, 1)
+    },
+    handlePreview(file) {
+      this.previewImg = file.url
+      this.imgAttrVisible = true
     }
   }
 }
@@ -199,5 +232,8 @@ export default {
 }
 .el-checkbox {
   margin:5px 0 0 10px;
+}
+.el-dialog img {
+  width: 100%;
 }
 </style>

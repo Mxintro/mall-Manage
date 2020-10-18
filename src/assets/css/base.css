@@ -44,3 +44,8 @@ body {
 .ql-editor {
   min-height: 300px;
 }
+
+.el-pagination {
+  margin-top: 20px;
+  text-align: center;
+}

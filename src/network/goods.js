@@ -27,3 +27,7 @@ export function deleteGoodAttr(id, attrId) {
 export function getGoodsList(params) {
   return instance.get('/goods', { params: params })
 }
+
+export function addGood(params) {
+  return instance.post('/goods', params)
+}

@@ -86,7 +86,12 @@
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </el-tab-pane>
-        <el-tab-pane label="商品内容">商品内容</el-tab-pane>
+        <el-tab-pane label="商品内容">
+          <quill-editor
+            v-model="addGoodInfo.goods_introduce">
+          </quill-editor>
+          <el-button type="primary" @click="handleAddGood" id="add-good">添加商品</el-button>
+        </el-tab-pane>
       </el-tabs>
     </el-form>
   </el-card>
@@ -98,7 +103,7 @@
 </template>
 
 <script>
-import { getGoodsCate, getGoodsAttributes } from 'network/goods'
+import { getGoodsCate, getGoodsAttributes, addGood } from 'network/goods'
 
 export default {
   name: 'AddGoods',
@@ -137,13 +142,13 @@ export default {
           { required: true, message: '请选择商品分类', trigger: 'blur' }
         ],
         goods_price: [
-          { required: true, message: '请输入商品名称', trigger: 'blur' }
+          { required: true, message: '价格不能为空', trigger: 'blur' }
         ],
         goods_number: [
-          { required: true, message: '请输入商品名称', trigger: 'blur' }
+          { required: true, message: '数量不能为空', trigger: 'blur' }
         ],
         goods_weight: [
-          { required: true, message: '请输入商品名称', trigger: 'blur' }
+          { required: true, message: '重量不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -193,7 +198,6 @@ export default {
         this.sel = 'many'
         this.getGoodsAttrs('manyAttrList').then(_ => {
           this.manyAttrList.forEach(item => {
-            console.log(item)
             item.attr_vals = item.attr_vals.split(' ')
           })
         })
@@ -208,7 +212,6 @@ export default {
       console.log(this.manyAttrList)
     },
     imgUploaded(response, file, fileList) {
-      console.log(response, file, fileList)
       this.imgList.push(response.data.tmp_path)
     },
     handleRemove(file) {
@@ -218,6 +221,40 @@ export default {
     handlePreview(file) {
       this.previewImg = file.url
       this.imgAttrVisible = true
+    },
+    handleAddGood() {
+      this.$refs.addGoodForm.validate(valid => {
+        if (!valid) {
+          this.$message({ type: 'error', message: '请填写必要选项'})
+          return false
+        }
+      })
+      // cascader不允许直接修改addGoodInfo.goods_cat
+      const form = { ...this.addGoodInfo }
+      form.goods_cat = form.goods_cat.join(',')
+      this.manyAttrList.forEach(item => {
+        const newVal = {
+          attr_id: item.attr_id,
+          attr_value: item.attr_vals.join(' ')
+        }
+        this.addGoodInfo.attrs.push(newVal)
+      })
+      this.onlyAttrList.forEach(item => {
+        const newVal = {
+          attr_id: item.attr_id,
+          attr_value: item.attr_vals
+        }
+        this.addGoodInfo.attrs.push(newVal)
+      })
+      form.attrs = this.addGoodInfo.attrs
+      console.log(form)
+      addGood(form).then(res => {
+        console.log(res)
+        this.$message({type: 'success', message: '商品添加成功'})
+        this.$router.push('/goods')
+      }).catch(error => {
+        this.$message({type: 'error', message: error})
+      })
     }
   }
 }
@@ -235,5 +272,8 @@ export default {
 }
 .el-dialog img {
   width: 100%;
+}
+#add-good {
+  margin-top: 10px;
 }
 </style>

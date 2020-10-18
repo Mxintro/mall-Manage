@@ -40,3 +40,7 @@ body {
 .el-cascader-panel {
   height: 200px;
 }
+/* 富文本编辑器输入框高度 */
+.ql-editor {
+  min-height: 300px;
+}

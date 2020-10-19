@@ -1,17 +1,22 @@
 import axios from 'axios'
 
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
 export const instance = axios.create({
   baseURL: 'http://127.0.0.1:8888/api/private/v1/',
   timeout: 1000
 })
 
 instance.interceptors.request.use(config => {
+  NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
   console.log(config)
   return config
 })
 
 instance.interceptors.response.use(response => {
+  NProgress.done()
   const status = response.data.meta.status
   console.log(response)
   if (status % 200 <= 10 && status < 210) {

@@ -1,6 +1,8 @@
 <template>
   <el-container>
-    <el-header>Header</el-header>
+    <el-header>后台管理系统
+      <div class="log-out"><el-button type="info" @click="logOut">退出登录</el-button></div>
+    </el-header>
     <el-container>
       <el-aside :width="isCollapse ? '60px' : '200px'">
         <div class="toggle-button" @click="toggleClick">|||</div>
@@ -81,6 +83,15 @@ export default {
     itemClick(arg) {
       window.sessionStorage.setItem('activePath', arg)
       this.activePath = arg
+    },
+    logOut() {
+      sessionStorage.clear()
+      try {
+        window.sessionStorage.clear()
+        this.$router.push('login')
+      } catch {
+        this.$message.error('退出失败')
+      }
     }
   }
 }
@@ -127,5 +138,9 @@ body > .el-container {
 } */
 .iconfont {
   margin-right: 10px;
+}
+.log-out {
+  float: right;
+  height: 100%;
 }
 </style>

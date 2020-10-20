@@ -3,17 +3,17 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const Home = () => import('views/home/Home')
-const Users = () => import('views/users/Users')
-const Login = () => import('views/login/Login')
-const Rights = () => import('views/rights/Rights')
-const Roles = () => import('views/rights/Roles')
-const Cate = () => import('views/goods/Cate')
-const Params = () => import('views/goods/Params')
-const GoodsList = () => import('views/goods/GoodsList')
-const AddGoods = () => import('views/goods/AddGoods')
-const Order = () => import('views/order/Order')
-const Reports = () => import('views/report/Reports')
+const Home = () => import(/* webpackChunkName: "home" */ 'views/home/Home')
+const Users = () => import(/* webpackChunkName: "users" */ 'views/users/Users')
+const Login = () => import(/* webpackChunkName: "login" */ 'views/login/Login')
+const Rights = () => import(/* webpackChunkName: "rights" */ 'views/rights/Rights')
+const Roles = () => import(/* webpackChunkName: "roles" */ 'views/rights/Roles')
+const Cate = () => import(/* webpackChunkName: "goods_cate" */ 'views/goods/Cate')
+const Params = () => import(/* webpackChunkName: "goods_params" */ 'views/goods/Params')
+const GoodsList = () => import(/* webpackChunkName: "goods_list" */ 'views/goods/GoodsList')
+const AddGoods = () => import(/* webpackChunkName: "goods_add" */ 'views/goods/AddGoods')
+const Order = () => import(/* webpackChunkName: "order" */ 'views/order/Order')
+const Reports = () => import(/* webpackChunkName: "report" */ 'views/report/Reports')
 
 const routes = [
   { path: '/', component: Home },

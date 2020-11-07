@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+const WelCome = () => import(/* webpackChunkName: "home" */ 'views/home/WelCome')
 const Home = () => import(/* webpackChunkName: "home" */ 'views/home/Home')
 const Users = () => import(/* webpackChunkName: "users" */ 'views/users/Users')
 const Login = () => import(/* webpackChunkName: "login" */ 'views/login/Login')
@@ -23,6 +24,7 @@ const routes = [
     name: 'Home',
     component: Home,
     children: [
+      { path: '', component: WelCome },
       { path: '/users', component: Users },
       { path: '/rights', component: Rights },
       { path: '/roles', component: Roles },

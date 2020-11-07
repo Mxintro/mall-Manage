@@ -18,6 +18,7 @@ export function formatDate (date, fmt) {
   return fmt
 }
 
+// 深合并
 export function deepMerge(obj1, obj2) {
   let key
   for (key in obj2) {

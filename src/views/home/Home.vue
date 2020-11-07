@@ -81,7 +81,7 @@ export default {
       this.isCollapse = !this.isCollapse
     },
     itemClick(arg) {
-      window.sessionStorage.setItem('activePath', arg)
+      window.sessionStorage.setItem('activePath', arg) // 利用sessionStorage保持状态
       this.activePath = arg
     },
     logOut() {

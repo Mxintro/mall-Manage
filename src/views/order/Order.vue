@@ -190,6 +190,7 @@ export default {
     },
     showProgress() {
       this.progressVisible = true
+      // this.progressId = 773046451247625
       this.progressId = 1106975712662
       this.getProgressInfo()
     }

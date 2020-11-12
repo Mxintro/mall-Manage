@@ -104,6 +104,7 @@
 
 <script>
 import { getGoodsCate, getGoodsAttributes, addGood } from 'network/goods'
+import { baseURL } from 'network/axios'
 
 export default {
   name: 'AddGoods',
@@ -127,7 +128,7 @@ export default {
       manyAttrList: [],
       checkboxGroup: [],
       parentCateList: [],
-      uploadUrl: 'http://127.0.0.1:8888/api/private/v1/upload',
+      uploadUrl: baseURL + 'upload',
       imgHeaders: {
         Authorization: window.sessionStorage.getItem('token')
       },

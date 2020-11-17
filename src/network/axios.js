@@ -3,7 +3,7 @@ import axios from 'axios'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-const baseURL = 'http://192.168.101.12:8888/api/private/v1/'
+export const baseURL = 'http://81.68.203.112:8888/api/private/v1/'
 
 export const instance = axios.create({
   baseURL,

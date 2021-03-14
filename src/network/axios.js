@@ -4,7 +4,7 @@ import axios from 'axios'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-export const baseURL = 'http://8d1.68.203.112:8888/api/private/v1/'
+export const baseURL = 'http://81.68.147.193:8888/api/private/v1/'
 
 export function httpBase(option) {
   return new Promise((resolve, reject) => {
